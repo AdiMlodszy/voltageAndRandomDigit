@@ -48,14 +48,6 @@ void updateVoltage() {
       // Wtedy "3.3" staje się dwoma cyframi: '3' '3'
       int displayValue = (int) roundf(roundedFloat * 10.0f);
 
-      // Debug: Wyświetl w Serialu
-      Serial.print("Received float: ");
-      Serial.print(receivedFloat);
-      Serial.print(" => rounded to: ");
-      Serial.print(roundedFloat);
-      Serial.print(" => displayValue: ");
-      Serial.println(displayValue);
-
       // Krok 4: Upewnij się, że mieści się w zakresie 0-99
       if (displayValue < 0)   displayValue = 0;
       if (displayValue > 99) displayValue = 99;
