@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6", // ES6 jako docelowa wersja JavaScript
+    "lib": ["ES2015", "DOM"], // Biblioteki dołączane do kompilacji
+    "module": "CommonJS", // Typ modułu
+    "outDir": "./dist", // Folder wyjściowy dla skompilowanych plików
+    "rootDir": "./", // Folder główny (w którym znajduje się `index.ts`)
+    "strict": true // Włącz rygorystyczny tryb TypeScript
+  },
+  "include": [
+    "./*.ts" // Uwzględnia pliki TS w bieżącym folderze
+  ],
+  "exclude": [
+    "node_modules", // Wyklucza folder `node_modules`
+    "./dist" // Wyklucza folder wyjściowy
+  ]
+}

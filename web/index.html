@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voltage Simulator</title>
+    <!-- Tailwind z CDN. W razie potrzeby zainstaluj i skonfiguruj lokalnie -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="font-sans flex items-center justify-center min-h-screen bg-blue-400"
+  >
+    <main class="text-center space-y-10" aria-labelledby="appTitle">
+      <!-- Nagłówek główny -->
+      <header>
+        <h1 id="appTitle" class="text-4xl font-bold">Voltage Simulator</h1>
+      </header>
+
+      <!-- Przycisk do podłączenia -->
+      <section>
+        <button
+          id="connectButton"
+          class="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-900"
+          aria-label="Connect to Arduino"
+        >
+          Connect to Arduino
+        </button>
+      </section>
+
+      <!-- Przycisk do włączania --> 
+      
+     <section>
+      <button
+        id="startButton"
+        class="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-900"
+        aria-label="Start sending data"
+      >
+        Start sending data
+      </button>
+    </section>
+
+      <!-- Przycisk do rozłączenia -->
+
+      <section>
+        <button
+          id="stopButton"
+          class="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-900"
+          aria-label="Stop sending data"
+        >
+          Stop sending data
+        </button>
+      </section>
+
+      <!-- Sekcja wyświetlacza napięcia -->
+      <section aria-labelledby="voltageHeader">
+        <h2 id="voltageHeader" class="sr-only">Voltage Display</h2>
+        <output
+          id="voltageDisplay"
+          class="text-3xl font-bold mt-6"
+          aria-live="polite"
+        >
+          0.00 V
+        </output>
+      </section>
+
+      <!-- Pasek postępu -->
+      <section>
+        <div
+          class="relative inline-block w-40 h-40 border-4 border-black mt-8 rotate-[-90deg]"
+        >
+          <progress
+            id="voltageBar"
+            class="w-full h-full appearance-none"
+            max="5"
+            value="0"
+            aria-labelledby="progressLabel"
+          ></progress>
+          <span id="progressLabel" class="sr-only">Voltage Level</span>
+        </div>
+      </section>
+    </main>
+    <!-- Umieszczamy skrypt na końcu, aby elementy HTML były już wczytane -->
+    <script src="./index.js"></script>
+  </body>
+</html>
