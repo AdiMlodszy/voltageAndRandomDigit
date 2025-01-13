@@ -6,6 +6,31 @@
  * inicjalizację pinów, wyświetlanie liczb oraz multipleksowanie wyświetlacza.
  */
 
+/**
+ * @brief Inicjalizuje piny wyświetlacza 7-segmentowego.
+ *
+ * Funkcja ustawia odpowiednie piny jako wyjścia i ustawia ich stan początkowy.
+ */
+void setupDisplay();
+
+/**
+ * @brief Wyświetla liczbę na wyświetlaczu 7-segmentowym.
+ *
+ * @param number Liczba do wyświetlenia (zakres od 0 do 99).
+ *
+ * Funkcja dzieli liczbę na cyfry dziesiętne i jednostkowe, które są następnie
+ * wyświetlane na odpowiednich segmentach wyświetlacza.
+ */
+void displayNumber(int number);
+
+/**
+ * @brief Multipleksuje wyświetlacz 7-segmentowy.
+ *
+ * Funkcja przełącza między cyframi wyświetlacza, aby wyświetlić pełną liczbę.
+ * Każda cyfra jest wyświetlana przez krótki czas, co daje efekt ciągłego wyświetlania.
+ */
+void multiplexDisplay();
+
 #include "display.h"
 
 const int segments[7] = {3, 4, 5, 6, 7, 8, 9};

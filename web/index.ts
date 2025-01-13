@@ -1,3 +1,4 @@
+
 /**
  * Interfejs rozszerzający Navigator o właściwość serial.
  */
@@ -40,15 +41,14 @@ let isSending = false;
  */
 // const connectBtn = document.getElementById("connectButton") as HTMLButtonElement;
 
-const connectBtn = document.getElementById(
-  "connectButton"
-) as HTMLButtonElement;
+
+const connectBtn = document.getElementById("connectButton") as HTMLButtonElement;
 console.log(connectBtn); // sprawdź w konsoli, czy nie jest "null"
 
 if (connectBtn) {
-  connectBtn.addEventListener("click", () => toggleConnection());
+    connectBtn.addEventListener("click", () => toggleConnection());
 } else {
-  console.error("Element o ID 'connectButton' nie istnieje w DOM!");
+    console.error("Element o ID 'connectButton' nie istnieje w DOM!");
 }
 /**
  * Referencja do przycisku Start.
@@ -63,9 +63,7 @@ const stopBtn = document.getElementById("stopButton") as HTMLButtonElement;
 /**
  * Referencja do elementu wyświetlającego napięcie.
  */
-const voltageDisplayEl = document.getElementById(
-  "voltageDisplay"
-) as HTMLOutputElement;
+const voltageDisplayEl = document.getElementById("voltageDisplay") as HTMLOutputElement;
 
 /**
  * Referencja do paska postępu wyświetlającego napięcie.
@@ -105,7 +103,7 @@ async function connect() {
 
     isConnected = true;
     if (connectBtn) {
-      connectBtn.textContent = "Rozłącz z Arduino";
+        connectBtn.textContent = "Rozłącz z Arduino";
     }
     console.log("Port connected successfully");
 
@@ -137,11 +135,14 @@ async function disconnect() {
     }
 
     // Oczekaj na zakończenie pipe'a, aby uniknąć błędów
-    if (pipePromise) {
-      console.log("Waiting for pipe to finish...");
-      await pipePromise.catch((error) => console.error("Pipe error:", error));
+    if(pipePromise) {
+      await pipePromise.catch(() => {
+        // Ignoruj błędy);
+      });
       pipePromise = null;
     }
+    
+
     // 3. Zamknij port (jeśli istnieje)
     if (port) {
       console.log("Closing port...");
@@ -151,7 +152,7 @@ async function disconnect() {
 
     isConnected = false;
     if (connectBtn) {
-      connectBtn.textContent = "Połącz z Arduino";
+        connectBtn.textContent = "Połącz z Arduino";
     }
 
     // Zablokuj przyciski start/stop

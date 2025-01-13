@@ -1,36 +1,65 @@
-# Projekt: Arduino 7-Segment Display + Random Voltage Logger
+# Dokumentacja Techniczna Projektu Voltometer i Generator Liczb Losowych
 
-## Opis
-Ten projekt służy do wyświetlania mierzonego napięcia (0-5 V) na zewnętrznym wyświetlaczu 7-segmentowym oraz do losowego generowania liczb 0-99 po wciśnięciu przycisku. 
+## Opis projektu
+
+Projekt łączy funkcjonalność woltomierza z generatorem liczb losowych, wykorzystując Arduino oraz aplikację webową. System umożliwia pomiar napięcia, wyświetlanie wartości na wyświetlaczu 7-segmentowym oraz generowanie liczb losowych.
+
+## Komponenty sprzętowe
+
+- Arduino
+- Wyświetlacz 7-segmentowy dwucyfrowy
+- Potencjometr
+- 2 przyciski (tryb i losowanie)
+- Rezystory i przewody połączeniowe
+
+## Struktura projektu
+
+### Moduły Arduino
+
+1. **Wyświetlacz (display.h/cpp)**
+
+   - Obsługa wyświetlacza 7-segmentowego
+   - Multipleksowanie cyfr
+   - Wyświetlanie liczb 0-99
+
+2. **Pomiar napięcia (voltage.h/cpp)**
+
+   - Odczyt napięcia z potencjometru
+   - Konwersja wartości analogowej na napięcie
+   - Komunikacja przez Serial
+
+3. **Przyciski (button.h/cpp, mode.h/cpp)**
+   - Obsługa przycisku losowania
+   - Obsługa przycisku trybu pracy
+   - Eliminacja drgań styków (debouncing)
+
+### Aplikacja webowa
+
+1. **Interface użytkownika (index.html)**
+
+   - Przyciski kontrolne
+   - Wyświetlacz napięcia
+   - Pasek postępu
+
+2. **Logika (index.ts)**
+   - Komunikacja szeregowa z Arduino
+   - Generowanie losowych wartości napięcia
+   - Zarządzanie stanem połączenia
 
 ## Funkcjonalności
-- Pomiar napięcia z pinu A1 i wypisywanie go w monitorze szeregowym (port Serial). 
-- Przycisk (podłączony do pinu 2) aktywuje/wyłącza tryb losowania liczb.
-- Wyświetlanie wartości na dwucyfrowym wyświetlaczu 7-segmentowym (wspólna katoda).
 
-## Wymagania sprzętowe
-- Płytka Arduino (Uno / Nano / inna AVR).
-- Wyświetlacz 7-segmentowy dwucyfrowy lub dwa pojedyncze wyświetlacze.
-- Potencjometr podłączony do A1 (lub stałe źródło napięcia w zakresie 0-5 V).
-- Przycisk podłączony do pinu 2 (z użyciem rezystora pull-up lub trybu INPUT_PULLUP w Arduino).
+- Pomiar napięcia (0-5V)
+- Generowanie liczb losowych (0-99)
+- Przełączanie trybów pracy
+- Dwukierunkowa komunikacja Serial
+- Wizualizacja danych w przeglądarce
 
-## Użyte biblioteki
-- [Bounce2](https://github.com/thomasfredericks/Bounce2) do debouncu przycisku.
+## Wymagania techniczne
 
-## Instrukcja kompilacji i wgrania
-1. Sklonuj repozytorium / pobierz kod.
-2. Zainstaluj [PlatformIO IDE](https://platformio.org/) w Visual Studio Code (lub użyj Arduino IDE). 
-3. Zainstaluj bibliotekę Bounce2 (w PlatformIO `platformio lib install "Bounce2"`).
-4. Otwórz projekt w VS Code -> PlatformIO -> Build -> Upload (lub w Arduino IDE).
-5. Sprawdź w menedżerze urządzeń, jaki port COM przypisano Arduino i ustaw go w `platformio.ini` (jeśli potrzeba).
+- Arduino IDE lub PlatformIO
+- Przeglądarka z obsługą Web Serial API
+- Połączenie USB
 
-## Architektura projektu
-- `src/display.cpp` + `include/display.h` - obsługa wyświetlacza 7-segmentowego (multipleksowanie, ustawianie cyfr).
-- `src/main.cpp` - główny kod: inicjalizacja, pętla `loop()`, pomiar napięcia, obsługa przycisku, losowanie.
-- `platformio.ini` (jeśli używasz PlatformIO).
+## Autorzy
 
-## Autor
-- Imię i Nazwisko lub pseudonim (Rok).
-
-## Licencja
-Opcjonalnie, np. MIT License, GPLv3 itp.
+Adrian Kasprzak, 2025

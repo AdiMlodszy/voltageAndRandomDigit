@@ -1,7 +1,19 @@
+/**
+ * @file voltage.cpp
+ * @brief Plik odpowiedzialny za obsługę pomiaru napięcia oraz odbieranie i przetwarzanie danych z portu szeregowego.
+ *
+ * Ten plik zawiera funkcje umożliwiające:
+ *  - Inicjalizację pinu odpowiadającego za pomiar napięcia.
+ *  - Odczytywanie wartości napięcia z potencjometru i wysyłanie jej przez Serial.
+ *  - Odbieranie danych z aplikacji zewnętrznej, przetwarzanie ich do postaci liczbowej
+ *    oraz wyświetlanie na wyświetlaczu 7-segmentowym.
+ *
+ * @author 
+ * @date 
+ */
 #include "voltage.h"
 #include "display.h"
 #include "mode.h"
-#include <math.h>  // Dla roundf (jeśli używasz roundf w C++)
 
 const byte voltometerPin = A1;
 int voltageBinary = 0;

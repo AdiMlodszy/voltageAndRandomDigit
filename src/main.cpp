@@ -1,13 +1,17 @@
 /**
  * @file main.cpp
- * @brief Główny plik programu Arduino / PlatformIO.
- * 
- * Zajmuje się:
- * - konfiguracją pinu potencjometru
- * - odczytem napięcia
- * - obsługą przycisku z wykorzystaniem Bounce2
- * - uruchamianiem losowania (tryb isRandomizing)
- * - wyświetlaniem wartości na 7-seg
+ * @brief Główny plik programu dla Arduino/PlatformIO.
+ *
+ * W tym pliku zapewniono:
+ *  - konfigurację oraz odczyt wartości z potencjometru
+ *  - obsługę przycisku losowania (z wykorzystaniem biblioteki Bounce2)
+ *  - obsługę przycisku trybu pracy
+ *  - inicjalizację funkcji wyświetlania informacji na wyświetlaczu 7-segmentowym (multipleksowanie)
+ *  - ustawienie generatora liczb pseudolosowych na bazie odczytu z pinu analogowego
+ *
+ * Szczegóły funkcjonalne:
+ *  - Funkcja setup() inicjalizuje niezbędne moduły (wyświetlacz, przyciski, napięcie) oraz ustawia prędkość transmisji szeregowej.
+ *  - Funkcja loop() w kółko odczytuje napięcie, aktualizuje stan przycisków trybu i losowania oraz steruje wyświetlaniem.
  */
 
 #include <Arduino.h>

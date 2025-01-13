@@ -123,8 +123,9 @@ function disconnect() {
             }
             // Oczekaj na zakończenie pipe'a, aby uniknąć błędów
             if (pipePromise) {
-                console.log("Waiting for pipe to finish...");
-                yield pipePromise.catch((error) => console.error("Pipe error:", error));
+                yield pipePromise.catch(() => {
+                    // Ignoruj błędy);
+                });
                 pipePromise = null;
             }
             // 3. Zamknij port (jeśli istnieje)

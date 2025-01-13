@@ -1,6 +1,39 @@
+
+/**
+ * @file button.cpp
+ * @brief Implementacja obsługi przycisku losowania oraz trybu losowania.
+ */
+
 #include "button.h"
 #include <Bounce2.h>
 #include "display.h"
+
+const int randomButtonPin = 2; ///< Pin przycisku losowania
+bool randomizingMode = false; ///< Flaga trybu losowania
+
+Bounce randomButton = Bounce(); ///< Obiekt debouncera dla przycisku losowania
+
+/**
+ * @brief Funkcja inicjalizująca przycisk losowania.
+ * 
+ * Ustawia tryb pracy pinu przycisku oraz konfiguruje obiekt debouncera.
+ */
+void setupRandomButton();
+
+/**
+ * @brief Funkcja aktualizująca stan przycisku losowania.
+ * 
+ * Sprawdza, czy przycisk został naciśnięty i zmienia tryb losowania.
+ * W trybie losowania generuje losowe liczby i wyświetla je na wyświetlaczu.
+ */
+void updateRandomButton();
+
+/**
+ * @brief Funkcja zwracająca stan trybu losowania.
+ * 
+ * @return true jeśli tryb losowania jest włączony, false w przeciwnym razie.
+ */
+bool isRandomizing();
 
 const int randomButtonPin = 2; // Pin przycisku losowania
 bool randomizingMode = false; // Flaga trybu losowania
