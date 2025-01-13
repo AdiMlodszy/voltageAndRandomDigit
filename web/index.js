@@ -34,18 +34,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+/**
+ * Zmienna przechowująca referencję do portu szeregowego.
+ */
 var port = null;
+/**
+ * Zmienna przechowująca referencję do writer'a strumienia.
+ */
 var writer = null;
-var isConnected = false; // Flaga stanu połączenia
-// Elementy z HTML
-var connectBtn = document.getElementById("connectButton");
-var startBtn = document.getElementById("startButton");
-var stopBtn = document.getElementById("stopButton");
-var voltageDisplayEl = document.getElementById("voltageDisplay");
-var voltageBar = document.getElementById("voltageBar");
+/**
+ * Zmienna przechowująca identyfikator interwału wysyłania danych.
+ */
 var sendingInterval = null;
 /**
- * Funkcja obsługująca kliknięcie przycisku Connect/Disconnect
+ * Zmienna przechowująca obietnicę wysłania danych do Arduino.
+ */
+var pipePromise = null;
+/**
+ * Flaga wskazująca, czy połączenie z Arduino jest aktywne.
+ */
+var isConnected = false;
+/**
+ * Flaga wskazująca, czy dane są aktualnie wysyłane do Arduino.
+ */
+var isSending = false;
+/**
+ * Referencja do przycisku Connect/Disconnect.
+ */
+// const connectBtn = document.getElementById("connectButton") as HTMLButtonElement;
+var connectBtn = document.getElementById("connectButton");
+console.log(connectBtn); // sprawdź w konsoli, czy nie jest "null"
+if (connectBtn) {
+    connectBtn.addEventListener("click", function () { return toggleConnection(); });
+}
+else {
+    console.error("Element o ID 'connectButton' nie istnieje w DOM!");
+}
+/**
+ * Referencja do przycisku Start.
+ */
+var startBtn = document.getElementById("startButton");
+/**
+ * Referencja do przycisku Stop.
+ */
+var stopBtn = document.getElementById("stopButton");
+/**
+ * Referencja do elementu wyświetlającego napięcie.
+ */
+var voltageDisplayEl = document.getElementById("voltageDisplay");
+/**
+ * Referencja do paska postępu wyświetlającego napięcie.
+ */
+var voltageBar = document.getElementById("voltageBar");
+/**
+ * Obsługa kliknięcia przycisku Connect/Disconnect.
+ * Łączy lub rozłącza z Arduino w zależności od aktualnego stanu połączenia.
  */
 function toggleConnection() {
     return __awaiter(this, void 0, void 0, function () {
@@ -53,17 +96,12 @@ function toggleConnection() {
             switch (_a.label) {
                 case 0:
                     if (!!isConnected) return [3 /*break*/, 2];
-                    // Jeśli nie jest jeszcze połączone, spróbuj połączyć
                     return [4 /*yield*/, connect()];
                 case 1:
-                    // Jeśli nie jest jeszcze połączone, spróbuj połączyć
                     _a.sent();
                     return [3 /*break*/, 4];
-                case 2: 
-                // Jeśli jest już połączone, rozłącz
-                return [4 /*yield*/, disconnect()];
+                case 2: return [4 /*yield*/, disconnect()];
                 case 3:
-                    // Jeśli jest już połączone, rozłącz
                     _a.sent();
                     _a.label = 4;
                 case 4: return [2 /*return*/];
@@ -72,7 +110,9 @@ function toggleConnection() {
     });
 }
 /**
- * Funkcja nawiązuje połączenie z Arduino
+ * Funkcja łączenia z Arduino.
+ * Otwiera port szeregowy i przygotowuje strumień do wysyłania danych.
+ * Odblokowuje przyciski Start/Stop po pomyślnym połączeniu.
  */
 function connect() {
     return __awaiter(this, void 0, void 0, function () {
@@ -81,21 +121,23 @@ function connect() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
+                    console.log("Requesting port...");
                     return [4 /*yield*/, navigator.serial.requestPort()];
                 case 1:
-                    // Użytkownik wybiera port
                     port = _a.sent();
+                    console.log("Port selected:", port);
                     return [4 /*yield*/, port.open({ baudRate: 9600 })];
                 case 2:
                     _a.sent();
                     textEncoder = new TextEncoderStream();
-                    textEncoder.readable.pipeTo(port.writable);
+                    pipePromise = textEncoder.readable.pipeTo(port.writable);
                     writer = textEncoder.writable.getWriter();
-                    // Aktualizacja stanu i etykiety
                     isConnected = true;
-                    connectBtn.textContent = "Disconnect";
+                    if (connectBtn) {
+                        connectBtn.textContent = "Rozłącz z Arduino";
+                    }
                     console.log("Port connected successfully");
-                    // Odblokuj przyciski Start / Stop
+                    // Odblokowanie przycisków Start/Stop
                     startBtn.disabled = false;
                     stopBtn.disabled = false;
                     return [3 /*break*/, 4];
@@ -109,7 +151,9 @@ function connect() {
     });
 }
 /**
- * Funkcja rozłączania
+ * Rozłączenie z Arduino.
+ * Zatrzymuje wysyłanie danych, zamyka writer i port.
+ * Blokuje przyciski Start/Stop po rozłączeniu.
  */
 function disconnect() {
     return __awaiter(this, void 0, void 0, function () {
@@ -117,81 +161,99 @@ function disconnect() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    // Zatrzymaj ewentualne wysyłanie, żeby nie próbowało pisać do zamkniętego portu
+                    _a.trys.push([0, 7, , 8]);
+                    console.log("Disconnecting...");
+                    // 1. Zatrzymaj wysyłanie, aby setInterval nie pisał do strumienia
                     stopSending();
                     if (!writer) return [3 /*break*/, 2];
+                    console.log("Closing writer...");
                     return [4 /*yield*/, writer.close()];
                 case 1:
                     _a.sent();
+                    writer = null;
                     _a.label = 2;
                 case 2:
-                    if (!port) return [3 /*break*/, 4];
-                    return [4 /*yield*/, port.close()];
+                    if (!pipePromise) return [3 /*break*/, 4];
+                    console.log("Waiting for pipe to finish...");
+                    return [4 /*yield*/, pipePromise.catch(function (error) { return console.error("Pipe error:", error); })];
                 case 3:
                     _a.sent();
+                    pipePromise = null;
                     _a.label = 4;
                 case 4:
-                    // Aktualizacja stanu i etykiety
+                    if (!port) return [3 /*break*/, 6];
+                    console.log("Closing port...");
+                    return [4 /*yield*/, port.close()];
+                case 5:
+                    _a.sent();
+                    port = null;
+                    _a.label = 6;
+                case 6:
                     isConnected = false;
-                    connectBtn.textContent = "Connect to Arduino";
-                    console.log("Port disconnected");
-                    // Zablokuj przyciski Start / Stop
+                    if (connectBtn) {
+                        connectBtn.textContent = "Połącz z Arduino";
+                    }
+                    // Zablokuj przyciski start/stop
                     startBtn.disabled = true;
                     stopBtn.disabled = true;
-                    return [3 /*break*/, 6];
-                case 5:
+                    console.log("Port disconnected");
+                    return [3 /*break*/, 8];
+                case 7:
                     error_2 = _a.sent();
                     console.error("Disconnection failed:", error_2);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
             }
         });
     });
 }
 /**
- * Start wysyłania losowych napięć
+ * Uruchom wysyłanie losowych wartości napięcia do Arduino.
+ * Aktualizuje wyświetlacz napięcia i pasek postępu co 5s.
  */
 function startSending() {
     if (!isConnected || !writer) {
         console.error("Cannot start sending: Not connected or no writer available");
         return;
     }
-    // Jeśli już wysyłamy dane, zatrzymaj poprzedni interwał
-    if (sendingInterval !== null) {
-        clearInterval(sendingInterval);
-    }
+    // Jeśli już coś wysyłamy, zatrzymaj poprzedni interwał
+    stopSending();
+    isSending = true;
     sendingInterval = window.setInterval(function () {
-        var voltage = (Math.random() * 5).toFixed(2);
+        // Jeśli writer zniknął w trakcie, zakończ
+        if (!writer || !isSending)
+            return;
+        var voltage = (Math.random() * 5).toFixed(1);
         voltageDisplayEl.value = "".concat(voltage, " V");
         voltageBar.value = parseFloat(voltage);
         try {
-            writer === null || writer === void 0 ? void 0 : writer.write(voltage + "\n");
+            writer.write(voltage + "\n");
         }
         catch (error) {
             console.error("Error writing:", error);
+            stopSending();
         }
     }, 5000);
     console.log("Started sending data");
 }
 /**
- * Stop wysyłania danych
+ * Zatrzymaj wysyłanie danych do Arduino.
+ * Czyści interwał wysyłania i ustawia flagę isSending na false.
  */
 function stopSending() {
     if (sendingInterval !== null) {
         clearInterval(sendingInterval);
         sendingInterval = null;
     }
+    isSending = false;
     console.log("Stopped sending data");
 }
-// Event Listeners
-connectBtn.addEventListener("click", toggleConnection);
-startBtn.addEventListener("click", startSending);
-stopBtn.addEventListener("click", stopSending);
 /**
- * Upewnij się, że w pliku HTML (index.html) przyciski Start i Stop
- * mają disabled="true" na starcie, aby były odblokowane dopiero po połączeniu:
- *
- * <button id="startButton" disabled>Start sending data</button>
- * <button id="stopButton" disabled>Stop sending data</button>
+ * Event Listeners
+ * Dodaje nasłuchiwanie na kliknięcia przycisków Connect, Start i Stop.
  */
+if (connectBtn) {
+    connectBtn.addEventListener("click", function () { return toggleConnection(); });
+}
+startBtn.addEventListener("click", function () { return startSending(); });
+stopBtn.addEventListener("click", function () { return stopSending(); });

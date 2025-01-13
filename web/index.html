@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <title>Voltage Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body
     class="font-sans flex items-center justify-center min-h-screen bg-gray-400"
   >
     <main class="text-center space-y-10" aria-labelledby="appTitle">
-      <script src="./index.js"></script>
       <!-- Nagłówek główny -->
       <header>
         <h1 id="appTitle" class="text-4xl font-bold">Symulator napięcia</h1>
@@ -21,9 +20,9 @@
         <button
           id="connectButton"
           class="px-16 py-8 bg-blue-700 text-white rounded-lg hover:bg-blue-900"
-          aria-label="Connect to Arduino"
+          aria-label="Połącz z Arduino"
         >
-          Podłącz do Arduino
+          Połącz z Arduino
         </button>
       </section>
 
@@ -34,6 +33,7 @@
           id="startButton"
           class="px-8 py-2 bg-green-700 text-white rounded-lg hover:bg-green-900"
           aria-label="Start sending data"
+          disabled
         >
           Rozpocznij przesyłanie danych
         </button>
@@ -46,6 +46,7 @@
           id="stopButton"
           class="px-9 py-2 bg-red-700 text-white rounded-lg hover:bg-red-900"
           aria-label="Stop sending data"
+          disabled
         >
           Zatrzymaj przesyłanie danych
         </button>
@@ -59,7 +60,7 @@
           class="text-3xl font-bold mt-6"
           aria-live="polite"
         >
-          0.00 V
+          0.0 V
         </output>
       </section>
 
@@ -79,5 +80,6 @@
         </div>
       </section>
     </main>
+    <script src="./index.js" defer></script>
   </body>
 </html>
