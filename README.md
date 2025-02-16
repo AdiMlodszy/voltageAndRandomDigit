@@ -1,4 +1,4 @@
-# Dokumentacja Techniczna Projektu Voltometer i Generator Liczb Losowych
+# Dokumentacja Techniczna Projektu Woltomierza i Generatora Liczb Losowych
 
 ## Opis projektu
 
